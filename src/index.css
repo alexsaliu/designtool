@@ -25,10 +25,38 @@ body {
     background: #fbfbfb;
 }
 
+.editor-panel {
+    position: absolute;
+    transform: translateY(-200px);
+    width: 1200px;
+}
+
+.editor-button {
+    margin: 1rem;
+    height: 4rem;
+    width: 14rem;
+    background: no-repeat;
+    border: 7px dashed #ff8800;
+    font-size: 1.5rem;
+    color: #575757;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .banner-container {
     width: 1200px;
     height: 270px;
-    background: white;
     border: 1px solid lightgrey;
     box-sizing: initial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner {
+    position: relative;
+}
+
+.banner * {
+    position: absolute;
 }
