@@ -19,16 +19,25 @@ body {
 }
 
 .editor {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: #fbfbfb;
 }
 
+.editor-section {
+    position: relative;
+    width: 100%;
+}
+
+.editor-section {
+    height: calc(100%/4 - 275px/4);
+    padding: 1rem;
+}
+
+.editor-section.three {
+    height: 275px;
+    padding: 0;
+}
+
 .editor-panel {
-    position: absolute;
-    transform: translateY(-200px);
-    width: 1200px;
 }
 
 .editor-button {
@@ -51,6 +60,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: auto;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
 }
 
 .banner {

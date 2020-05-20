@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './index.css';
+import { useSelector } from 'react-redux';
+
+import '../index.css';
 import Button from './Button.js';
 
 const Banner = () => {
@@ -13,15 +15,19 @@ const Banner = () => {
     const [mouseY, setMouseY] = useState(0);
     const [mouseX, setMouseX] = useState(0);
     const [phantomElement, setPhantomElement] = useState(false);
+    const test = useSelector(state => state.editor);
+
+    let startY = 0;
+    let startX = 0;
 
     useEffect(() => {
-      console.log(elements);
-    }, [elements]);
+      console.log("1");
+    });
 
     const createButton = (coords) => {
 
-        const left = elementStartingX;
-        const top = elementStartingY;
+        const left = startX;
+        const top = startY;
         const width = Math.abs(coords[0] - left);
         const height = Math.abs(coords[1] - top);
 
@@ -54,7 +60,7 @@ const Banner = () => {
         const left = elementStartingX;
         const top = elementStartingY;
         setElementWidth(Math.abs(x - left));
-        setElementHeight(Math.abs(y - top))
+        setElementHeight(Math.abs(y - top));
         return [x,y];
         // console.log(mouseCoords);
         // console.log(e.nativeEvent);
@@ -62,10 +68,14 @@ const Banner = () => {
 
     const startElement = (e) => {
         console.log("Start");
-        setPhantomElement(true);
         const coords = getMouseCoords(e);
+        setElementWidth(0);
+        setElementHeight(0);
         setElementStartingX(coords[0]);
+        startX = coords[0];
+        startY = coords[1];
         setElementStartingY(coords[1]);
+        setPhantomElement(true);
     }
 
     const endElement = (e) => {
