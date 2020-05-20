@@ -1,10 +1,18 @@
 import {
-    ADD_ELEMENT
-} from './constants.js';
+    UPDATE_ELEMENTS,
+    SET_SELECTED_ELEMENT_ID
+} from '../constants.js';
 
-export const addElement = (element) => {
+export const updateElements = (elements) => {
     return {
-        type: "ADD_ELEMENT",
+        type: UPDATE_ELEMENTS,
+        payload: elements,
+    }
+}
+
+export const setSelectedElementId = (element) => {
+    return {
+        type: SET_SELECTED_ELEMENT_ID,
         payload: element,
     }
 }
