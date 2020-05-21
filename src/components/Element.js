@@ -5,6 +5,7 @@ import Highlight from './Highlight.js';
 import Adjuster from './Adjuster.js';
 
 import {
+    movingElement,
     updateElements,
     setSelectedElementId
 } from '../store/actions/actions.js';
@@ -17,19 +18,23 @@ const Element = ({ id }) => {
 
     const state = useSelector(state => state.editor.elements);
     const selectedId = useSelector(state => state.editor.selectedElementId);
+    const isMoving = useSelector(state => state.editor.movingElement);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        setUpdatedElements([...state]);
+        console.log(state);
+    }, [state])
 
     const commenceMovingElement = (e) => {
         setStartingPosition(getMouseCoords(e));
-        console.log("startingPosition: ", startingPosition);
-        dispatch(setSelectedElementId(id))
-        setMoving(true);
+        dispatch(setSelectedElementId(id));
+        dispatch(movingElement(true));
     }
 
     const getMouseCoords = (e) => {
         const x = e.nativeEvent.offsetX;
         const y = e.nativeEvent.offsetY;
-        console.log([x,y]);
         return [x,y];
     }
 
@@ -37,7 +42,6 @@ const Element = ({ id }) => {
         const xChange = currentMouse[0] - startMouse[0];
         const yChange = currentMouse[1] - startMouse[1];
         const newPosition = [elementPosition[0] + xChange, elementPosition[1] + yChange];
-
         return newPosition;
     }
 
@@ -52,7 +56,7 @@ const Element = ({ id }) => {
     }
 
     const setPosition = (e) => {
-        if (!moving) return;
+        if (!isMoving) return;
         let elements = [...state];
         let style = state[id].style;
         const left = getNumericValue(style.left);
@@ -72,8 +76,10 @@ const Element = ({ id }) => {
     }
 
     const updateStore = () => {
+        if (selectedId !== id || selectedId === id && !isMoving) return;
+        console.log("YOU DOG: ", updatedElements);
         dispatch(updateElements(updatedElements));
-        setMoving(false);
+        dispatch(movingElement(false));
     }
 
     if (state[id].type === 'button') {
@@ -82,7 +88,7 @@ const Element = ({ id }) => {
             className={selectedId === id ? 'selected' : ''}
             style={state[id].style}
             onMouseEnter={() => setHilighted(true)}
-            onMouseLeave={() => setHilighted(false)}
+            onMouseLeave={() => {setHilighted(false); updateStore()}}
             onMouseDown={(e) => commenceMovingElement(e)}
             onMouseUp={() => updateStore()}
             onMouseMove={(e) => {setPosition(e)}}

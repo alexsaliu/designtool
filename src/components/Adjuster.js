@@ -7,6 +7,8 @@ const Adjuster = ({ styles }) => {
         left: '0px',
     })
 
+    const isMoving = useSelector(state => state.editor.movingElement);
+
     useEffect(() => {
         let style = {...adjusterStyles};
         let parentBorder = styles.border.match(/\d+/);
@@ -21,16 +23,19 @@ const Adjuster = ({ styles }) => {
 
     return (
         <div style={adjusterStyles} className="adjuster-container">
+        { !isMoving ?
+            <div style={{width: '100%', height: '100%'}}>
+                <div className="adjuster line left"></div>
+                <div className="adjuster line top"></div>
+                <div className="adjuster line right"></div>
+                <div className="adjuster line bottom"></div>
 
-            <div className="adjuster line left"></div>
-            <div className="adjuster line top"></div>
-            <div className="adjuster line right"></div>
-            <div className="adjuster line bottom"></div>
-
-            <div className="adjuster square top left"></div>
-            <div className="adjuster square top right"></div>
-            <div className="adjuster square bottom right"></div>
-            <div className="adjuster square bottom left"></div>
+                <div className="adjuster square top left"></div>
+                <div className="adjuster square top right"></div>
+                <div className="adjuster square bottom right"></div>
+                <div className="adjuster square bottom left"></div>
+            </div> : ''
+        }
 
             <div className="dimensions">{styles.width.match(/\d+/)[0]} x {styles.height.match(/\d+/)[0]}</div>
 
