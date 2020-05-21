@@ -13,6 +13,7 @@ const Element = ({ id }) => {
     const [highlighted, setHilighted] = useState(false);
     const [moving, setMoving] = useState(false);
     const [startingPosition, setStartingPosition] = useState([0,0]);
+    const [updatedElements, setUpdatedElements] = useState([]);
 
     const state = useSelector(state => state.editor.elements);
     const selectedId = useSelector(state => state.editor.selectedElementId);
@@ -67,7 +68,12 @@ const Element = ({ id }) => {
         let y = checkPositionBoundaries(newElementPosition[1], 0, 235 - height);
 
         elements[id].style = {...elements[id].style, left: `${x}px`, top: `${y}px`};
-        dispatch(updateElements(elements));
+        setUpdatedElements(elements);
+    }
+
+    const updateStore = () => {
+        dispatch(updateElements(updatedElements));
+        setMoving(false);
     }
 
     if (state[id].type === 'button') {
@@ -78,7 +84,7 @@ const Element = ({ id }) => {
             onMouseEnter={() => setHilighted(true)}
             onMouseLeave={() => setHilighted(false)}
             onMouseDown={(e) => commenceMovingElement(e)}
-            onMouseUp={() => setMoving(false)}
+            onMouseUp={() => updateStore()}
             onMouseMove={(e) => {setPosition(e)}}
             >
 
