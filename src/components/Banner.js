@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import '../index.css';
-import Button from './Button.js';
+import Element from './Element.js';
 
 const Banner = () => {
     // const [elements, setElements] = useState([]);
@@ -61,7 +61,7 @@ const Banner = () => {
             // onMouseUp={(e) => endElement(e)}
             // onMouseMove={(e) => getMouseCoords(e)}
         >
-            {state.elements.map((element, i) => <Button key={i} id={i} />)}
+            {state.elements.map((element, i) => <Element key={i} id={i} />)}
 
 
             {/* <button style={buttonMode ? {border: "7px dashed lightgreen"} : {}} className="editor-button" onClick={() => setButtonMode(!buttonMode)}>button +</button> */}

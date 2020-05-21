@@ -1,7 +1,15 @@
 import {
+    MOVING_ELEMENT,
     UPDATE_ELEMENTS,
     SET_SELECTED_ELEMENT_ID
 } from '../constants.js';
+
+export const movingElement = (bool) => {
+    return {
+        type: MOVING_ELEMENT,
+        payload: bool,
+    }
+}
 
 export const updateElements = (elements) => {
     return {
@@ -10,9 +18,9 @@ export const updateElements = (elements) => {
     }
 }
 
-export const setSelectedElementId = (element) => {
+export const setSelectedElementId = (id) => {
     return {
         type: SET_SELECTED_ELEMENT_ID,
-        payload: element,
+        payload: id,
     }
 }
