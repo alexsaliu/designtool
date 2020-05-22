@@ -9,7 +9,7 @@ import PanelElementManager from './PanelElementManager.js';
 import PanelStyles from './PanelStyles.js';
 
 import {
-    setSelectedElementId
+    setMousePosition
 } from '../store/actions/actions.js';
 
 const Editor = () => {
@@ -21,11 +21,17 @@ const Editor = () => {
         console.log(state);
     });
 
+    const getMouseCoords = (e) => {
+        const x = e.nativeEvent.offsetX;
+        const y = e.nativeEvent.offsetY;
+        dispatch(setMousePosition([x,y]));
+    }
+
     return (
         <div className="editor">
             <PanelTop />
             <PanelTwo />
-            <div className="editor-section three">
+            <div onMouseMove={(e) => getMouseCoords(e)} className="editor-section three">
                 <div className="banner-container">
                     <Banner />
                 </div>

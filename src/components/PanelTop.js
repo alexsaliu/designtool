@@ -28,7 +28,6 @@ const PanelTop = () => {
                 'top': '0px',
                 'width': '200px',
                 'height': '100px',
-                'fill': 'lightgreen',
                 'border': '1px solid grey',
             },
             'content': ''

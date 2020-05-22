@@ -1,10 +1,12 @@
 import {
+    SET_MOUSE_POSITION,
     MOVING_ELEMENT,
     UPDATE_ELEMENTS,
     SET_SELECTED_ELEMENT_ID,
 } from '../constants.js';
 
 const initialState = {
+    mousePosition: [0,0],
     movingElement: false,
     elements: [],
     selectedElementId: -1,
@@ -12,6 +14,8 @@ const initialState = {
 
 export const editorReducer = (state = initialState, action = {}) => {
     switch (action.type) {
+        case SET_MOUSE_POSITION:
+            return {...state, mousePosition: action.payload};
         case MOVING_ELEMENT:
             return {...state, movingElement: action.payload};
         case UPDATE_ELEMENTS:

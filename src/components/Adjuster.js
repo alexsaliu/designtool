@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
+import {
+    updateElements
+} from '../store/actions/actions.js';
+
 const Adjuster = ({ styles }) => {
     const [adjusterStyles, setAdjusterStyles] = useState({
         top: '0px',
@@ -19,6 +23,14 @@ const Adjuster = ({ styles }) => {
         // console.log(style);
         setAdjusterStyles(style);
     }, [styles])
+
+    const updateSize = () => {
+        //left
+
+        //right
+        //top
+        //bottom
+    }
 
 
     return (

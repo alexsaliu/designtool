@@ -16,32 +16,33 @@ const Element = ({ id }) => {
     const [startingPosition, setStartingPosition] = useState([0,0]);
     const [updatedElements, setUpdatedElements] = useState([]);
 
-    const state = useSelector(state => state.editor.elements);
+    const elements = useSelector(state => state.editor.elements);
     const selectedId = useSelector(state => state.editor.selectedElementId);
     const isMoving = useSelector(state => state.editor.movingElement);
+    const mousePosition = useSelector(state => state.editor.mousePosition);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setUpdatedElements([...state]);
-        console.log(state);
-    }, [state])
+        setUpdatedElements([...elements]);
+    }, [elements])
 
-    const commenceMovingElement = (e) => {
-        setStartingPosition(getMouseCoords(e));
+    useEffect(() => {
+        if (selectedId === id && isMoving) {
+            setPosition(mousePosition);
+        }
+    }, [mousePosition])
+
+    const commenceMovingElement = () => {
         dispatch(setSelectedElementId(id));
         dispatch(movingElement(true));
-    }
-
-    const getMouseCoords = (e) => {
-        const x = e.nativeEvent.offsetX;
-        const y = e.nativeEvent.offsetY;
-        return [x,y];
+        setStartingPosition(mousePosition);
     }
 
     const calculateElementPosition = (startMouse, currentMouse, elementPosition) => {
         const xChange = currentMouse[0] - startMouse[0];
         const yChange = currentMouse[1] - startMouse[1];
         const newPosition = [elementPosition[0] + xChange, elementPosition[1] + yChange];
+
         return newPosition;
     }
 
@@ -52,50 +53,47 @@ const Element = ({ id }) => {
     }
 
     const getNumericValue = (value) => {
-        return parseInt(value.match(/\d+/)[0]);
+        return parseInt(value.match(/-?\d+/)[0]);
     }
 
-    const setPosition = (e) => {
-        if (!isMoving) return;
-        let elements = [...state];
-        let style = state[id].style;
+    const setPosition = (coords) => {
+        let currentElements = [...elements];
+        let style = elements[id].style;
         const left = getNumericValue(style.left);
         const top = getNumericValue(style.top);
         const width = getNumericValue(style.width);
         const height = getNumericValue(style.height);
 
-        const currentMousePosition = getMouseCoords(e);
+        const currentMousePosition = coords;
         const elementPosition = [left, top];
         const newElementPosition = calculateElementPosition(startingPosition, currentMousePosition, elementPosition);
 
         let x = checkPositionBoundaries(newElementPosition[0], 0, 800 - width);
         let y = checkPositionBoundaries(newElementPosition[1], 0, 235 - height);
 
-        elements[id].style = {...elements[id].style, left: `${x}px`, top: `${y}px`};
-        setUpdatedElements(elements);
+        currentElements[id].style = {...currentElements[id].style, left: `${x}px`, top: `${y}px`};
+        setUpdatedElements(currentElements);
     }
 
     const updateStore = () => {
         if (selectedId !== id || selectedId === id && !isMoving) return;
-        console.log("YOU DOG: ", updatedElements);
         dispatch(updateElements(updatedElements));
         dispatch(movingElement(false));
     }
 
-    if (state[id].type === 'button') {
+    if (elements[id].type === 'button') {
         return (
             <div
-            className={selectedId === id ? 'selected' : ''}
-            style={state[id].style}
-            onMouseEnter={() => setHilighted(true)}
-            onMouseLeave={() => {setHilighted(false); updateStore()}}
-            onMouseDown={(e) => commenceMovingElement(e)}
-            onMouseUp={() => updateStore()}
-            onMouseMove={(e) => {setPosition(e)}}
+                className={selectedId === id ? 'selected' : ''}
+                style={elements[id].style}
+                onMouseEnter={() => setHilighted(true)}
+                onMouseLeave={() => {setHilighted(false); updateStore()}}
+                onMouseDown={() => commenceMovingElement()}
+                onMouseUp={() => updateStore()}
             >
 
-            {highlighted && selectedId !== id ? <Highlight styles={state[id].style} /> : ''}
-            {selectedId === id ? <Adjuster styles={state[id].style} /> : ''}
+            {highlighted && selectedId !== id ? <Highlight styles={elements[id].style} /> : ''}
+            {selectedId === id ? <Adjuster styles={elements[id].style} /> : ''}
 
             </div>
         );
