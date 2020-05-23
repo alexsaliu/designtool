@@ -17,9 +17,9 @@ const Editor = () => {
     const state = useSelector(state => state.editor);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        console.log(state);
-    });
+    // useEffect(() => {
+    //     console.log(state);
+    // });
 
     const getMouseCoords = (e) => {
         const x = e.nativeEvent.offsetX;

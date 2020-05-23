@@ -18,7 +18,7 @@ const PanelTop = () => {
     }
 
     const createElement = (type) => {
-        let elements = state.elements;
+        let elements = [...state.elements];
         const id = parseInt(elements.length);
         const newElement = {
             'id': id,

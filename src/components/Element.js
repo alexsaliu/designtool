@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { getNumericValue } from '../helpers.js';
+
 import Highlight from './Highlight.js';
 import Adjuster from './Adjuster.js';
 
@@ -11,7 +13,7 @@ import {
 } from '../store/actions/actions.js';
 
 const Element = ({ id }) => {
-    const [highlighted, setHilighted] = useState(false);
+    const [highlighted, setHighlighted] = useState(false);
     const [moving, setMoving] = useState(false);
     const [startingPosition, setStartingPosition] = useState([0,0]);
     const [updatedElements, setUpdatedElements] = useState([]);
@@ -24,7 +26,12 @@ const Element = ({ id }) => {
 
     useEffect(() => {
         setUpdatedElements([...elements]);
+        console.log("ELEMENTS: ", elements);
     }, [elements])
+
+    useEffect(() => {
+        console.log("highlighted: ", highlighted);
+    }, [highlighted])
 
     useEffect(() => {
         if (selectedId === id && isMoving) {
@@ -52,10 +59,6 @@ const Element = ({ id }) => {
         return position;
     }
 
-    const getNumericValue = (value) => {
-        return parseInt(value.match(/-?\d+/)[0]);
-    }
-
     const setPosition = (coords) => {
         let currentElements = [...elements];
         let style = elements[id].style;
@@ -75,7 +78,7 @@ const Element = ({ id }) => {
         setUpdatedElements(currentElements);
     }
 
-    const updateStore = () => {
+    const updateElementPosition = () => {
         if (selectedId !== id || selectedId === id && !isMoving) return;
         dispatch(updateElements(updatedElements));
         dispatch(movingElement(false));
@@ -84,16 +87,21 @@ const Element = ({ id }) => {
     if (elements[id].type === 'button') {
         return (
             <div
-                className={selectedId === id ? 'selected' : ''}
                 style={elements[id].style}
-                onMouseEnter={() => setHilighted(true)}
-                onMouseLeave={() => {setHilighted(false); updateStore()}}
-                onMouseDown={() => commenceMovingElement()}
-                onMouseUp={() => updateStore()}
+                className={selectedId === id ? 'selected' : ''}
             >
+                <div
 
-            {highlighted && selectedId !== id ? <Highlight styles={elements[id].style} /> : ''}
-            {selectedId === id ? <Adjuster styles={elements[id].style} /> : ''}
+                    style={{width: '100%', height: '100%'}}
+                    onMouseEnter={() => setHighlighted(true)}
+                    onMouseLeave={() => {setHighlighted(false); updateElementPosition()}}
+                    onMouseDown={() => commenceMovingElement()}
+                    onMouseUp={() => updateElementPosition()}
+                >
+                </div>
+
+                {highlighted ? <Highlight styles={elements[id].style} /> : ''}
+                {selectedId === id ? <Adjuster styles={elements[id].style} /> : ''}
 
             </div>
         );
