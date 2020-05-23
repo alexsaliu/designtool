@@ -18,6 +18,7 @@ const Element = ({ id }) => {
     const [startingPosition, setStartingPosition] = useState([0,0]);
     const [updatedElements, setUpdatedElements] = useState([]);
 
+    const bannerSize = useSelector(state => state.editor.bannerSize);
     const elements = useSelector(state => state.editor.elements);
     const selectedId = useSelector(state => state.editor.selectedElementId);
     const isMoving = useSelector(state => state.editor.movingElement);
@@ -26,12 +27,7 @@ const Element = ({ id }) => {
 
     useEffect(() => {
         setUpdatedElements([...elements]);
-        console.log("ELEMENTS: ", elements);
     }, [elements])
-
-    useEffect(() => {
-        console.log("highlighted: ", highlighted);
-    }, [highlighted])
 
     useEffect(() => {
         if (selectedId === id && isMoving) {
@@ -71,8 +67,8 @@ const Element = ({ id }) => {
         const elementPosition = [left, top];
         const newElementPosition = calculateElementPosition(startingPosition, currentMousePosition, elementPosition);
 
-        let x = checkPositionBoundaries(newElementPosition[0], 0, 800 - width);
-        let y = checkPositionBoundaries(newElementPosition[1], 0, 235 - height);
+        let x = checkPositionBoundaries(newElementPosition[0], 0, bannerSize[0] - width);
+        let y = checkPositionBoundaries(newElementPosition[1], 0, bannerSize[1] - height);
 
         currentElements[id].style = {...currentElements[id].style, left: `${x}px`, top: `${y}px`};
         setUpdatedElements(currentElements);
@@ -89,19 +85,18 @@ const Element = ({ id }) => {
             <div
                 style={elements[id].style}
                 className={selectedId === id ? 'selected' : ''}
+                onMouseEnter={() => setHighlighted(true)}
             >
-                <div
 
-                    style={{width: '100%', height: '100%'}}
-                    onMouseEnter={() => setHighlighted(true)}
-                    onMouseLeave={() => {setHighlighted(false); updateElementPosition()}}
-                    onMouseDown={() => commenceMovingElement()}
-                    onMouseUp={() => updateElementPosition()}
-                >
-                </div>
-
-                {highlighted ? <Highlight styles={elements[id].style} /> : ''}
-                {selectedId === id ? <Adjuster styles={elements[id].style} /> : ''}
+                {selectedId === id || highlighted
+                    ? <Adjuster
+                        styles={elements[id].style}
+                        selected={selectedId === id}
+                        setHighlighted={setHighlighted}
+                        updateElementPosition={updateElementPosition}
+                        commenceMovingElement={commenceMovingElement}
+                    /> : ''
+                }
 
             </div>
         );

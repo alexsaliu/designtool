@@ -6,6 +6,7 @@ import {
 } from '../constants.js';
 
 const initialState = {
+    bannerSize: [800, 235],
     mousePosition: [0,0],
     movingElement: false,
     elements: [],

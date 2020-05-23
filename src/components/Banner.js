@@ -5,15 +5,16 @@ import '../index.css';
 import Element from './Element.js';
 
 const Banner = () => {
-    const state = useSelector(state => state.editor);
+    const bannerSize = useSelector(state => state.editor.bannerSize);
+    const elements = useSelector(state => state.editor.elements);
     const dispatch = useDispatch();
 
     return (
         <div
             className="banner"
-            style={{width: "800px", height: "235px", background: "white"}}
+            style={{width: `${bannerSize[0]}px`, height: `${bannerSize[1]}px`, background: "white"}}
         >
-            {state.elements.map((element, i) => <Element key={i} id={i} />)}
+            {elements.map((element, i) => <Element key={i} id={i} />)}
 
         </div>
     );

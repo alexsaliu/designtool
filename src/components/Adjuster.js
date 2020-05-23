@@ -7,7 +7,7 @@ import {
     updateElements
 } from '../store/actions/actions.js';
 
-const Adjuster = ({ styles }) => {
+const Adjuster = ({ styles, selected, highlighted, setHighlighted, updateElementPosition, commenceMovingElement }) => {
     const [adjusterStyles, setAdjusterStyles] = useState({});
 
     const isMoving = useSelector(state => state.editor.movingElement);
@@ -15,42 +15,40 @@ const Adjuster = ({ styles }) => {
     useEffect(() => {
         let style = {};
         let parentBorder = styles.border ? getNumericValue(styles.border) : 0;
-        let right = getNumericValue(styles.width) + parentBorder * 2;
-        let bottom = getNumericValue(styles.height) + parentBorder * 2;
+        let left = getNumericValue(styles.left) - parentBorder / 2;
+        let top = getNumericValue(styles.top) - parentBorder / 2;
+        style.width = `${styles.width}`;
+        style.height = `${styles.height}`;
         style.left = `-${parentBorder}px`;
         style.top = `-${parentBorder}px`;
-        style.right = `-${right}px`;
-        style.bottom = `-${bottom}px`;
-
         setAdjusterStyles(style);
     }, [styles])
 
-    const positionAdjusterFrameOnElement = () => {
-        //left
-
-        //right
-        //top
-        //bottom
-    }
-
     if (styles) {
         return (
-            <div style={{left: adjusterStyles.left, top: adjusterStyles.top}} className="adjuster-container">
-            { !isMoving ?
-                <div>
-                    <div style={{}} className="adjuster square top left"></div>
-                    <div className="adjuster square top right"></div>
-                    <div className="adjuster square bottom right"></div>
-                    <div className="adjuster square bottom left"></div>
+            <div
+                style={adjusterStyles}
+                className="adjuster-container"
+            >
+                <div
+                    className="adjuster-dragger"
+                    onMouseLeave={() => {setHighlighted(false); updateElementPosition()}}
+                    onMouseDown={() => commenceMovingElement()}
+                    onMouseUp={() => updateElementPosition()}
+                >
+                </div>
 
-                    <div style={{height: `${styles.height}`}} className="adjuster line left"><div className="line-color vertical"></div></div>
-                    <div style={{width: `${styles.width}`}} className="adjuster line top"><div className="line-color horizontal"></div></div>
-                    <div style={{height: `${styles.height}`, right: `${adjusterStyles.right}`}} className="adjuster line right"><div className="line-color vertical"></div></div>
-                    <div style={{width: `${styles.width}`, bottom: `${adjusterStyles.bottom}`}} className="adjuster line bottom"><div className="line-color horizontal"></div></div>
-                </div> : ''
-            }
+                { !isMoving && selected ? <div className="adjuster line left"></div> : ''}
+                { !isMoving && selected ? <div className="adjuster line top"></div> : ''}
+                { !isMoving && selected ? <div className="adjuster line right"></div> : ''}
+                { !isMoving && selected ? <div className="adjuster line bottom"></div> : ''}
 
-            <div className="dimensions">{styles.width.match(/\d+/)[0]} x {styles.height.match(/\d+/)[0]}</div>
+                { !isMoving && selected ? <div className="adjuster square top left"></div> : ''}
+                { !isMoving && selected ? <div className="adjuster square top right"></div> : ''}
+                { !isMoving && selected ? <div className="adjuster square bottom right"></div> : ''}
+                { !isMoving && selected ? <div className="adjuster square bottom left"></div> : ''}
+
+                { !isMoving && selected ? <div className="dimensions">{styles.width.match(/\d+/)[0]} x {styles.height.match(/\d+/)[0]}</div> : ''}
 
             </div>
         );
