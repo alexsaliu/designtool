@@ -7,7 +7,16 @@ import {
     updateElements
 } from '../store/actions/actions.js';
 
-const Adjuster = ({ styles, selected, highlighted, setHighlighted, updateElementPosition, commenceMovingElement }) => {
+const Adjuster = ({
+    styles,
+    selected,
+    highlighted,
+    setHighlighted,
+    updateElementPosition,
+    commenceMovingElement,
+    updateElementDimensions,
+    commenceAdjustingElement
+}) => {
     const [adjusterStyles, setAdjusterStyles] = useState({});
 
     const isMoving = useSelector(state => state.editor.movingElement);
@@ -40,8 +49,8 @@ const Adjuster = ({ styles, selected, highlighted, setHighlighted, updateElement
 
                 { !isMoving && selected ? <div className="adjuster line left"></div> : ''}
                 { !isMoving && selected ? <div className="adjuster line top"></div> : ''}
-                { !isMoving && selected ? <div className="adjuster line right"></div> : ''}
-                { !isMoving && selected ? <div className="adjuster line bottom"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceAdjustingElement()} onMouseUp={() => {updateElementDimensions()}} className="adjuster line right"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceAdjustingElement()} onMouseUp={() => {updateElementDimensions()}} className="adjuster line bottom"></div> : ''}
 
                 { !isMoving && selected ? <div className="adjuster square top left"></div> : ''}
                 { !isMoving && selected ? <div className="adjuster square top right"></div> : ''}

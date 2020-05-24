@@ -9,7 +9,8 @@ import PanelElementManager from './PanelElementManager.js';
 import PanelStyles from './PanelStyles.js';
 
 import {
-    setMousePosition
+    setMousePosition,
+    setSelectedElementId
 } from '../store/actions/actions.js';
 
 const Editor = () => {
@@ -17,13 +18,14 @@ const Editor = () => {
     const state = useSelector(state => state.editor);
     const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     console.log(state);
-    // });
+    const clicked = () => {
+        dispatch(setSelectedElementId(-1))
+    }
 
     const getMouseCoords = (e) => {
         const x = e.nativeEvent.offsetX;
         const y = e.nativeEvent.offsetY;
+        console.log("MOUSE: ", [x, y]);
         dispatch(setMousePosition([x,y]));
     }
 

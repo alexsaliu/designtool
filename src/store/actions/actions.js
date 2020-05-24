@@ -1,6 +1,7 @@
 import {
     SET_MOUSE_POSITION,
     MOVING_ELEMENT,
+    ADJUSTING_ELEMENT,
     UPDATE_ELEMENTS,
     SET_SELECTED_ELEMENT_ID
 } from '../constants.js';
@@ -15,6 +16,13 @@ export const setMousePosition = (coords) => {
 export const movingElement = (bool) => {
     return {
         type: MOVING_ELEMENT,
+        payload: bool,
+    }
+}
+
+export const adjustingElement = (bool) => {
+    return {
+        type: ADJUSTING_ELEMENT,
         payload: bool,
     }
 }

@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getNumericValue } from '../helpers.js';
+import {
+    getNumericValue,
+    calculateElementNewPosition,
+    checkPositionBoundaries,
+    getUpdatedElementPosition,
+    getUpdatedElementDimensions
+ } from '../helpers.js';
 
-import Highlight from './Highlight.js';
 import Adjuster from './Adjuster.js';
 
 import {
     movingElement,
+    adjustingElement,
     updateElements,
     setSelectedElementId
 } from '../store/actions/actions.js';
@@ -18,10 +24,10 @@ const Element = ({ id }) => {
     const [startingPosition, setStartingPosition] = useState([0,0]);
     const [updatedElements, setUpdatedElements] = useState([]);
 
-    const bannerSize = useSelector(state => state.editor.bannerSize);
     const elements = useSelector(state => state.editor.elements);
     const selectedId = useSelector(state => state.editor.selectedElementId);
     const isMoving = useSelector(state => state.editor.movingElement);
+    const isAdjusting = useSelector(state => state.editor.adjustingElement);
     const mousePosition = useSelector(state => state.editor.mousePosition);
     const dispatch = useDispatch();
 
@@ -33,6 +39,9 @@ const Element = ({ id }) => {
         if (selectedId === id && isMoving) {
             setPosition(mousePosition);
         }
+        if (selectedId === id && isAdjusting) {
+            setDimensions(mousePosition);
+        }
     }, [mousePosition])
 
     const commenceMovingElement = () => {
@@ -41,36 +50,18 @@ const Element = ({ id }) => {
         setStartingPosition(mousePosition);
     }
 
-    const calculateElementPosition = (startMouse, currentMouse, elementPosition) => {
-        const xChange = currentMouse[0] - startMouse[0];
-        const yChange = currentMouse[1] - startMouse[1];
-        const newPosition = [elementPosition[0] + xChange, elementPosition[1] + yChange];
-
-        return newPosition;
+    const commenceAdjustingElement = () => {
+        dispatch(adjustingElement(true));
+        setStartingPosition(mousePosition);
     }
 
-    const checkPositionBoundaries = (position, min, max) => {
-        if (position < min) return min;
-        if (position > max) return max;
-        return position;
+    const setPosition = (currentMousePosition) => {
+        let currentElements = getUpdatedElementPosition(elements, id, startingPosition, currentMousePosition);
+        setUpdatedElements(currentElements);
     }
 
-    const setPosition = (coords) => {
-        let currentElements = [...elements];
-        let style = elements[id].style;
-        const left = getNumericValue(style.left);
-        const top = getNumericValue(style.top);
-        const width = getNumericValue(style.width);
-        const height = getNumericValue(style.height);
-
-        const currentMousePosition = coords;
-        const elementPosition = [left, top];
-        const newElementPosition = calculateElementPosition(startingPosition, currentMousePosition, elementPosition);
-
-        let x = checkPositionBoundaries(newElementPosition[0], 0, bannerSize[0] - width);
-        let y = checkPositionBoundaries(newElementPosition[1], 0, bannerSize[1] - height);
-
-        currentElements[id].style = {...currentElements[id].style, left: `${x}px`, top: `${y}px`};
+    const setDimensions = (currentMousePosition) => {
+        let currentElements = getUpdatedElementDimensions(elements, id, {bottom: true}, startingPosition, currentMousePosition);
         setUpdatedElements(currentElements);
     }
 
@@ -78,6 +69,12 @@ const Element = ({ id }) => {
         if (selectedId !== id || selectedId === id && !isMoving) return;
         dispatch(updateElements(updatedElements));
         dispatch(movingElement(false));
+    }
+
+    const updateElementDimensions = () => {
+        if (selectedId !== id || selectedId === id && !isAdjusting) return;
+        dispatch(updateElements(updatedElements));
+        dispatch(adjustingElement(false));
     }
 
     if (elements[id].type === 'button') {
@@ -95,6 +92,8 @@ const Element = ({ id }) => {
                         setHighlighted={setHighlighted}
                         updateElementPosition={updateElementPosition}
                         commenceMovingElement={commenceMovingElement}
+                        updateElementDimensions={updateElementDimensions}
+                        commenceAdjustingElement={commenceAdjustingElement}
                     /> : ''
                 }
 

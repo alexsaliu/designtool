@@ -7,6 +7,7 @@ import Element from './Element.js';
 const Banner = () => {
     const bannerSize = useSelector(state => state.editor.bannerSize);
     const elements = useSelector(state => state.editor.elements);
+    const selectedId = useSelector(state => state.editor.selectedId);
     const dispatch = useDispatch();
 
     return (
