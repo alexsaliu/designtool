@@ -22,54 +22,29 @@ const checkPositionBoundaries = (position, min, max) => {
     return position;
 }
 // Get new styles for elements new position
-export const getUpdatedElementPosition = (elements, id, startMouse, currentMouse) => {
+export const getUpdatedElementPosition = (elements, id, startingElementStyles, startMouse, currentMouse, dimensions) => {
     let currentElements = [...elements];
-    let style = elements[id].style;
 
-    const left = getNumericValue(style.left);
-    const top = getNumericValue(style.top);
-    const width = getNumericValue(style.width);
-    const height = getNumericValue(style.height);
+    let left = getNumericValue(startingElementStyles.left);
+    let top = getNumericValue(startingElementStyles.top);
+    let width = getNumericValue(startingElementStyles.width);
+    let height = getNumericValue(startingElementStyles.height);
 
-    const elementPosition = [left, top];
     const mouseChanges = calculateMousePositionChanges(startMouse, currentMouse);
-    const newElementPosition = calculateElementNewPosition(mouseChanges, elementPosition);
-
-    let x = checkPositionBoundaries(newElementPosition[0], 0, 800 - width);
-    let y = checkPositionBoundaries(newElementPosition[1], 0, 235 - height);
-
-    currentElements[id].style = {...currentElements[id].style, left: `${x}px`, top: `${y}px`};
-    return currentElements;
-}
-
-// CHANGING ELEMENT DIMENSIONS
-// Get new width from dragging right adjuster
-export const getUpdatedElementDimensions = (elements, id, dimensions, startMouse, currentMouse) => {
-    let currentElements = [...elements];
-    let style = elements[id].style;
-
-    let left = getNumericValue(style.left);
-    let top = getNumericValue(style.top);
-    let width = getNumericValue(style.width);
-    let height = getNumericValue(style.height);
-
     const elementPosition = [left, top];
-    const mouseChanges = calculateMousePositionChanges(startMouse, currentMouse);
     const newElementPosition = calculateElementNewPosition(mouseChanges, elementPosition);
 
     if (dimensions.left) {
-        width = mouseChanges[0];
-        left = newElementPosition[0];
+        left = checkPositionBoundaries(newElementPosition[0], 0, 800 - width);
     }
     if (dimensions.top) {
-        height = mouseChanges[1];
-        top = newElementPosition[1];
+        top = checkPositionBoundaries(newElementPosition[1], 0, 235 - height);
     }
-    if (dimensions.right) {
-        width = mouseChanges[0];
+    if (dimensions.width) {
+        width = dimensions.left ? width - mouseChanges[0] : width + mouseChanges[0];
     }
-    if (dimensions.bottom) {
-        height = mouseChanges[1];
+    if (dimensions.height) {
+        height = dimensions.top ? height - mouseChanges[1] : height + mouseChanges[1];
     }
 
     currentElements[id].style = {
@@ -79,6 +54,8 @@ export const getUpdatedElementDimensions = (elements, id, dimensions, startMouse
         width: `${width}px`,
         height: `${height}px`,
     };
+
+    console.log("currentElements: ", currentElements[id].style);
 
     return currentElements;
 }

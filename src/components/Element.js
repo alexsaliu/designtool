@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import Adjuster from './Adjuster.js';
+
 import {
     getNumericValue,
     calculateElementNewPosition,
@@ -8,8 +10,6 @@ import {
     getUpdatedElementPosition,
     getUpdatedElementDimensions
  } from '../helpers.js';
-
-import Adjuster from './Adjuster.js';
 
 import {
     movingElement,
@@ -22,6 +22,8 @@ const Element = ({ id }) => {
     const [highlighted, setHighlighted] = useState(false);
     const [moving, setMoving] = useState(false);
     const [startingPosition, setStartingPosition] = useState([0,0]);
+    const [startingElementStyles, setStartingElementStyles] = useState({});
+    const [adjustingDimensions, setAdjustingDimensions] = useState({});
     const [updatedElements, setUpdatedElements] = useState([]);
 
     const elements = useSelector(state => state.editor.elements);
@@ -36,45 +38,33 @@ const Element = ({ id }) => {
     }, [elements])
 
     useEffect(() => {
-        if (selectedId === id && isMoving) {
+        if (selectedId === id && (isMoving || isAdjusting)) {
             setPosition(mousePosition);
-        }
-        if (selectedId === id && isAdjusting) {
-            setDimensions(mousePosition);
         }
     }, [mousePosition])
 
-    const commenceMovingElement = () => {
+    const commenceMovingElement = (dimensions) => {
+        setStartingPosition(mousePosition);
+        setStartingElementStyles({...elements[id].style});
+        setAdjustingDimensions(dimensions);
+        dispatch(dimensions ? adjustingElement(true) : movingElement(true));
         dispatch(setSelectedElementId(id));
-        dispatch(movingElement(true));
-        setStartingPosition(mousePosition);
-    }
-
-    const commenceAdjustingElement = () => {
-        dispatch(adjustingElement(true));
-        setStartingPosition(mousePosition);
     }
 
     const setPosition = (currentMousePosition) => {
-        let currentElements = getUpdatedElementPosition(elements, id, startingPosition, currentMousePosition);
+        let currentElements = getUpdatedElementPosition(elements, id, startingElementStyles, startingPosition, currentMousePosition, adjustingDimensions);
         setUpdatedElements(currentElements);
     }
 
-    const setDimensions = (currentMousePosition) => {
-        let currentElements = getUpdatedElementDimensions(elements, id, {bottom: true}, startingPosition, currentMousePosition);
-        setUpdatedElements(currentElements);
-    }
-
-    const updateElementPosition = () => {
-        if (selectedId !== id || selectedId === id && !isMoving) return;
-        dispatch(updateElements(updatedElements));
-        dispatch(movingElement(false));
-    }
-
-    const updateElementDimensions = () => {
-        if (selectedId !== id || selectedId === id && !isAdjusting) return;
-        dispatch(updateElements(updatedElements));
-        dispatch(adjustingElement(false));
+    const updateElementPosition = (type) => {
+        if (selectedId === id && isMoving) {
+            dispatch(updateElements(updatedElements));
+            dispatch(movingElement(false));
+        }
+        else if (selectedId === id && isAdjusting) {
+            dispatch(updateElements(updatedElements));
+            dispatch(adjustingElement(false));
+        }
     }
 
     if (elements[id].type === 'button') {
@@ -92,8 +82,6 @@ const Element = ({ id }) => {
                         setHighlighted={setHighlighted}
                         updateElementPosition={updateElementPosition}
                         commenceMovingElement={commenceMovingElement}
-                        updateElementDimensions={updateElementDimensions}
-                        commenceAdjustingElement={commenceAdjustingElement}
                     /> : ''
                 }
 

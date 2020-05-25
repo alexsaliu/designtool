@@ -23,9 +23,8 @@ const Editor = () => {
     }
 
     const getMouseCoords = (e) => {
-        const x = e.nativeEvent.offsetX;
-        const y = e.nativeEvent.offsetY;
-        console.log("MOUSE: ", [x, y]);
+        const x = e.clientX;
+        const y = e.clientY;
         dispatch(setMousePosition([x,y]));
     }
 
