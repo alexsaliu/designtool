@@ -25,6 +25,7 @@ const PanelStyles = () => {
 
     const setPosition = (e, dimensions, style) => {
         const startingElementStyles = {...elements[id].style};
+        console.log("startingElementStyles: ", startingElementStyles);
         const currentPosition = [getNumericValue(startingElementStyles.left), getNumericValue(startingElementStyles.top)];
         const newPosition = [style === "left" ? e.target.value : 0, style === "top" ? e.target.value : 0];
         let updatedElements = getUpdatedElementPosition(elements, id, startingElementStyles, currentPosition, newPosition, dimensions);

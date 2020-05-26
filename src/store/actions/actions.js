@@ -1,9 +1,10 @@
 import {
     SET_MOUSE_POSITION,
     MOVING_ELEMENT,
-    ADJUSTING_ELEMENT,
     UPDATE_ELEMENTS,
-    SET_SELECTED_ELEMENT_ID
+    SET_SELECTED_ELEMENT_ID,
+    SET_ADJUSTING_DIMENSIONS,
+    SET_UPDATE_CANVAS
 } from '../constants.js';
 
 export const setMousePosition = (coords) => {
@@ -20,13 +21,6 @@ export const movingElement = (bool) => {
     }
 }
 
-export const adjustingElement = (bool) => {
-    return {
-        type: ADJUSTING_ELEMENT,
-        payload: bool,
-    }
-}
-
 export const updateElements = (elements) => {
     return {
         type: UPDATE_ELEMENTS,
@@ -38,5 +32,19 @@ export const setSelectedElementId = (id) => {
     return {
         type: SET_SELECTED_ELEMENT_ID,
         payload: id,
+    }
+}
+
+export const setAdjustingDimensions = (dimensions) => {
+    return {
+        type: SET_ADJUSTING_DIMENSIONS,
+        payload: dimensions,
+    }
+}
+
+export const setUpdateCanvas = (bool) => {
+    return {
+        type: SET_UPDATE_CANVAS,
+        payload: bool,
     }
 }

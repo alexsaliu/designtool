@@ -13,7 +13,7 @@ const PanelTop = () => {
     const dispatch = useDispatch();
 
     const printDOM = () => {
-        let html = document.querySelector('.banner-container').innerHTML;
+        let html = document.querySelector('.canvas-container').innerHTML;
         console.log(html);
     }
 

@@ -4,7 +4,7 @@ import '../index.css';
 
 import PanelTop from './PanelTop.js';
 import PanelTwo from './PanelTwo.js';
-import Banner from './Banner.js';
+import Canvas from './Canvas.js';
 import PanelElementManager from './PanelElementManager.js';
 import PanelStyles from './PanelStyles.js';
 
@@ -33,8 +33,8 @@ const Editor = () => {
             <PanelTop />
             <PanelTwo />
             <div onMouseMove={(e) => getMouseCoords(e)} className="editor-section three">
-                <div className="banner-container">
-                    <Banner />
+                <div className="canvas-container">
+                    <Canvas />
                 </div>
             </div>
             <PanelElementManager />

@@ -20,7 +20,6 @@ const Adjuster = ({
     const [adjusterStyles, setAdjusterStyles] = useState({});
 
     const isMoving = useSelector(state => state.editor.movingElement);
-    const isAdjusting = useSelector(state => state.editor.adjustingElement);
 
     useEffect(() => {
         let style = {};
@@ -46,21 +45,19 @@ const Adjuster = ({
             >
                 <div
                     className="adjuster-dragger"
-                    onMouseLeave={() => {setHighlighted(false); updateElementPosition()}}
                     onMouseDown={() => commenceMovingElement({left: true, top: true})}
-                    onMouseUp={() => updateElementPosition()}
                 >
                 </div>
 
-                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({left: true, width: true})} onMouseUp={() => updateElementPosition()} className="adjuster line left"></div> : ''}
-                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({top: true, height: true})} onMouseUp={() => updateElementPosition()} className="adjuster line top"></div> : ''}
-                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({width: true})} onMouseUp={() => updateElementPosition()} className="adjuster line right"></div> : ''}
-                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({height: true})} onMouseUp={() => updateElementPosition()} className="adjuster line bottom"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({left: true, width: true})} className="adjuster line left"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({top: true, height: true})} className="adjuster line top"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({width: true})} className="adjuster line right"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({height: true})} className="adjuster line bottom"></div> : ''}
 
-                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({left: true, top: true, width: true, height: true})} onMouseUp={() => updateElementPosition()} className="adjuster square top left"></div> : ''}
-                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({top: true, width: true, height: true})} onMouseUp={() => updateElementPosition()} className="adjuster square top right"></div> : ''}
-                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({width: true, height: true})} onMouseUp={() => updateElementPosition()} className="adjuster square bottom right"></div> : ''}
-                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({left: true, width: true, height: true})} onMouseUp={() => updateElementPosition()} className="adjuster square bottom left"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({left: true, top: true, width: true, height: true})} className="adjuster square top left"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({top: true, width: true, height: true})} className="adjuster square top right"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({width: true, height: true})} className="adjuster square bottom right"></div> : ''}
+                { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({left: true, width: true, height: true})} className="adjuster square bottom left"></div> : ''}
 
                 { !isMoving && selected ? <div className="dimensions">{styles.width.match(/\d+/)[0]} x {styles.height.match(/\d+/)[0]}</div> : ''}
 

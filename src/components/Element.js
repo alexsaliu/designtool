@@ -13,9 +13,10 @@ import {
 
 import {
     movingElement,
-    adjustingElement,
     updateElements,
-    setSelectedElementId
+    setSelectedElementId,
+    setAdjustingDimensions,
+    setUpdateCanvas
 } from '../store/actions/actions.js';
 
 const Element = ({ id }) => {
@@ -23,14 +24,14 @@ const Element = ({ id }) => {
     const [moving, setMoving] = useState(false);
     const [startingPosition, setStartingPosition] = useState([0,0]);
     const [startingElementStyles, setStartingElementStyles] = useState({});
-    const [adjustingDimensions, setAdjustingDimensions] = useState({});
     const [updatedElements, setUpdatedElements] = useState([]);
 
     const elements = useSelector(state => state.editor.elements);
     const selectedId = useSelector(state => state.editor.selectedElementId);
     const isMoving = useSelector(state => state.editor.movingElement);
-    const isAdjusting = useSelector(state => state.editor.adjustingElement);
     const mousePosition = useSelector(state => state.editor.mousePosition);
+    const adjustingDimensions = useSelector(state => state.editor.adjustingDimensions);
+    const updateCanvas = useSelector(state => state.editor.updateCanvas);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -38,17 +39,23 @@ const Element = ({ id }) => {
     }, [elements])
 
     useEffect(() => {
-        if (selectedId === id && (isMoving || isAdjusting)) {
+        if (selectedId === id && isMoving) {
             setPosition(mousePosition);
         }
     }, [mousePosition])
 
+    useEffect(() => {
+        if (selectedId === id && updateCanvas) {
+            updateElementPosition();
+        }
+    }, [updateCanvas])
+
     const commenceMovingElement = (dimensions) => {
         setStartingPosition(mousePosition);
         setStartingElementStyles({...elements[id].style});
-        setAdjustingDimensions(dimensions);
-        dispatch(dimensions ? adjustingElement(true) : movingElement(true));
+        dispatch(movingElement(true));
         dispatch(setSelectedElementId(id));
+        dispatch(setAdjustingDimensions(dimensions));
     }
 
     const setPosition = (currentMousePosition) => {
@@ -56,15 +63,10 @@ const Element = ({ id }) => {
         setUpdatedElements(currentElements);
     }
 
-    const updateElementPosition = (type) => {
-        if (selectedId === id && isMoving) {
-            dispatch(updateElements(updatedElements));
-            dispatch(movingElement(false));
-        }
-        else if (selectedId === id && isAdjusting) {
-            dispatch(updateElements(updatedElements));
-            dispatch(adjustingElement(false));
-        }
+    const updateElementPosition = () => {
+        dispatch(updateElements(updatedElements));
+        dispatch(movingElement(false));
+        dispatch(setUpdateCanvas(false));
     }
 
     if (elements[id].type === 'button') {
@@ -73,6 +75,7 @@ const Element = ({ id }) => {
                 style={elements[id].style}
                 className={selectedId === id ? 'selected' : ''}
                 onMouseEnter={() => setHighlighted(true)}
+                onMouseLeave={() => setHighlighted(false)}
             >
 
                 {selectedId === id || highlighted
