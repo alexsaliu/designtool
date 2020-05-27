@@ -234,11 +234,15 @@ body {
     height: 100%;
 }
 
-input.style-input {
+.style-input {
     width: 50px;
     border: none;
     padding: 3px;
     padding-bottom: 1px;
+}
+
+.style-input:focus {
+    outline: none;
 }
 
 .style-label {
