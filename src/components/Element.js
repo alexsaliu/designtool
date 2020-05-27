@@ -32,6 +32,7 @@ const Element = ({ id }) => {
     const mousePosition = useSelector(state => state.editor.mousePosition);
     const adjustingDimensions = useSelector(state => state.editor.adjustingDimensions);
     const updateCanvas = useSelector(state => state.editor.updateCanvas);
+    const canvasSize = useSelector(state => state.editor.canvasSize);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -55,11 +56,12 @@ const Element = ({ id }) => {
         setStartingElementStyles({...elements[id].style});
         dispatch(movingElement(true));
         dispatch(setSelectedElementId(id));
+        console.log("ID: ", id);
         dispatch(setAdjustingDimensions(dimensions));
     }
 
     const setPosition = (currentMousePosition) => {
-        let currentElements = getUpdatedElementPosition(elements, id, startingElementStyles, startingPosition, currentMousePosition, adjustingDimensions);
+        let currentElements = getUpdatedElementPosition(elements, id, startingElementStyles, startingPosition, currentMousePosition, adjustingDimensions, canvasSize);
         setUpdatedElements(currentElements);
     }
 

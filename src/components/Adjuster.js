@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { getNumericValue } from '../helpers.js';
 
 import {
-    updateElements
+    updateElements,
+    setSelectedElementId
 } from '../store/actions/actions.js';
 
 const Adjuster = ({
@@ -20,6 +21,9 @@ const Adjuster = ({
     const [adjusterStyles, setAdjusterStyles] = useState({});
 
     const isMoving = useSelector(state => state.editor.movingElement);
+    const selectedId = useSelector(state => state.editor.selectedElementId);
+    const elements = useSelector(state => state.editor.elements);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let style = {};
@@ -33,8 +37,16 @@ const Adjuster = ({
         setAdjusterStyles(style);
     }, [styles])
 
-    const test = () => {
-        console.log("TEST");
+    const deleteElement = (e) => {
+        if(selectedId >= 0 && e.keyCode === 8) {
+            const elementsAfterDelete = [];
+            for (let i = 0; i < elements.length; i++) {
+                if (i === selectedId) continue;
+                elementsAfterDelete.push({...elements[i]});
+            }
+            dispatch(updateElements(elementsAfterDelete));
+            dispatch(setSelectedElementId(-1));
+        }
     }
 
     if (styles) {
@@ -45,8 +57,9 @@ const Adjuster = ({
             >
                 <div
                     className="adjuster-dragger"
-                    onMouseDown={() => commenceMovingElement({left: true, top: true})}
+                    onMouseDown={(e) => commenceMovingElement({left: true, top: true})}
                 >
+                    <input autoFocus onKeyDown={(e) => deleteElement(e)} type="text" readOnly />
                 </div>
 
                 { !isMoving && selected ? <div onMouseDown={() => commenceMovingElement({left: true, width: true})} className="adjuster line left"></div> : ''}

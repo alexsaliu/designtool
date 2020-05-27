@@ -6,7 +6,7 @@ import PanelTop from './PanelTop.js';
 import PanelTwo from './PanelTwo.js';
 import Canvas from './Canvas.js';
 import PanelElementManager from './PanelElementManager.js';
-import PanelStyles from './PanelStyles.js';
+import PanelStyles from './panelStyles/PanelStyles.js';
 
 import {
     setMousePosition,
@@ -16,16 +16,17 @@ import {
 const Editor = () => {
 
     const state = useSelector(state => state.editor);
+    const selectedId = useSelector(state => state.editor.selectedElementId);
     const dispatch = useDispatch();
-
-    const clicked = () => {
-        dispatch(setSelectedElementId(-1))
-    }
 
     const getMouseCoords = (e) => {
         const x = e.clientX;
         const y = e.clientY;
         dispatch(setMousePosition([x,y]));
+    }
+
+    const deSelect = (e) => {
+        dispatch(setSelectedElementId(-1));
     }
 
     return (
@@ -34,6 +35,7 @@ const Editor = () => {
             <PanelTwo />
             <div onMouseMove={(e) => getMouseCoords(e)} className="editor-section three">
                 <div className="canvas-container">
+                    {selectedId >= 0 ? <div onClick={() => deSelect()} className="deselect-element"></div> : ''}
                     <Canvas />
                 </div>
             </div>

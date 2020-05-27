@@ -79,6 +79,12 @@ body {
     z-index: 1000!important;
 }
 
+.deselect-element {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+}
+
 :root {
     --adjuster-square-size: 10px;
     --adjuster-square-offset: calc(var(--adjuster-square-size) / -2);
@@ -182,4 +188,64 @@ body {
     min-width: 50px;
     justify-content: center;
 }
+
+.adjuster-dragger input {
+    border: white;
+    color: transparent;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: none;
+}
+
+.adjuster-dragger input:focus {
+    outline: none;
+}
 /* Adjuster */
+
+/* Style editor panel */
+.style-container {
+    width: 45%;
+    display: flex;
+    align-items: center;
+    margin: 4px 4px;
+    justify-content: center;
+    border: 1px solid transparent;
+}
+
+.style-container:hover {
+    border: 1px solid lightgrey;
+}
+
+.style-section {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 180px;
+    align-content: flex-start;
+    background: white;
+    padding: 5px;
+}
+
+.editor-panel {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+input.style-input {
+    width: 50px;
+    border: none;
+    padding: 3px;
+    padding-bottom: 1px;
+}
+
+.style-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    text-align: center;
+    width: 24px;
+    color: #ababab;
+}
+/* Style editor panel */

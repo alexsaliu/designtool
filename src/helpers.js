@@ -21,8 +21,15 @@ const checkPositionBoundaries = (position, min, max) => {
     if (position > max) return max;
     return position;
 }
+
+// Keep element within set boundaries
+const checkSizeBoundaries = (position, size, min, max) => {
+    if (position + size < min) return min;
+    if (position + size > max) return max - position;
+    return size;
+}
 // Get new styles for elements new position
-export const getUpdatedElementPosition = (elements, id, startingElementStyles, startMouse, currentMouse, dimensions) => {
+export const getUpdatedElementPosition = (elements, id, startingElementStyles, startMouse, currentMouse, dimensions, canvasSize) => {
     let currentElements = [...elements];
 
     let left = getNumericValue(startingElementStyles.left);
@@ -35,16 +42,16 @@ export const getUpdatedElementPosition = (elements, id, startingElementStyles, s
     const newElementPosition = calculateElementNewPosition(mouseChanges, elementPosition);
 
     if (dimensions.left) {
-        left = checkPositionBoundaries(newElementPosition[0], 0, 800 - width);
+        left = checkPositionBoundaries(newElementPosition[0], 0, canvasSize[0] - width);
     }
     if (dimensions.top) {
-        top = checkPositionBoundaries(newElementPosition[1], 0, 235 - height);
+        top = checkPositionBoundaries(newElementPosition[1], 0, canvasSize[1] - height);
     }
     if (dimensions.width) {
-        width = dimensions.left ? width - mouseChanges[0] : width + mouseChanges[0];
+        width = dimensions.left ? width - mouseChanges[0] : checkSizeBoundaries(left, width + mouseChanges[0], 0, canvasSize[0]);
     }
     if (dimensions.height) {
-        height = dimensions.top ? height - mouseChanges[1] : height + mouseChanges[1];
+        height = dimensions.top ? height - mouseChanges[1] : checkSizeBoundaries(top, height + mouseChanges[1], 0, canvasSize[1]);
     }
 
     currentElements[id].style = {
@@ -54,8 +61,6 @@ export const getUpdatedElementPosition = (elements, id, startingElementStyles, s
         width: `${width}px`,
         height: `${height}px`,
     };
-
-    console.log("currentElements: ", currentElements[id].style);
 
     return currentElements;
 }
