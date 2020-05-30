@@ -28,9 +28,17 @@ const PanelTop = () => {
                 'top': '0px',
                 'width': '200px',
                 'height': '100px',
+                'zIndex': String(id),
+                'background': '',
                 'border': '1px solid grey',
+                'borderRadius': '0px',
+                'fontFamily': '',
+                'fontSize': '',
+                'textTransform': '',
+                'boxShadow': '0px'
             },
-            'content': ''
+            'content': '',
+            'link': ''
         }
         elements.push(newElement)
         dispatch(updateElements(elements))

@@ -197,6 +197,7 @@ body {
     height: 100%;
     padding: 0;
     background: none;
+    cursor: move;
 }
 
 .adjuster-dragger input:focus {
@@ -212,6 +213,12 @@ body {
     margin: 4px 4px;
     justify-content: center;
     border: 1px solid transparent;
+}
+
+.style-section.two .style-container {
+    flex-direction: column;
+    margin: 4px 4px;
+    align-items: flex-start;
 }
 
 .style-container:hover {
@@ -243,13 +250,27 @@ body {
 
 .style-input:focus {
     outline: none;
+    /* background: whitesmoke; */
+}
+
+.style-input:hover {
+    background: whitesmoke;
 }
 
 .style-label {
     font-size: 0.8rem;
-    text-transform: uppercase;
     text-align: center;
     width: 24px;
     color: #ababab;
+}
+
+.color-box {
+    width: 15px;
+    height: 20px;
+    background: green;
+}
+
+.style-value-container {
+    display: flex;
 }
 /* Style editor panel */

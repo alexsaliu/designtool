@@ -39,8 +39,8 @@ const Editor = () => {
                     <Canvas />
                 </div>
             </div>
-            <PanelElementManager />
             <PanelStyles />
+            <PanelElementManager />
         </div>
     );
 }
