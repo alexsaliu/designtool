@@ -4,19 +4,72 @@ import Transparent from './transparent.png';
 const ColorPicker = () => {
     const [background, setBackground] = useState('#642BCD');
     const [selectorPosition, setSelectorPosition] = useState([20, 20]);
+    const [newSelectorPosition, setNewSelectorPosition] = useState(false);
     const [colorSliderPosition, setColorSliderPosition] = useState(10);
     const [transparentSliderPosition, setTransparentSliderPosition] = useState(15);
     const [moveColorSelector, setMoveColorSelector] = useState(false);
     const [moveColorSlider, setMoveColorSlider] = useState(false);
     const [moveTransparentSlider, setMoveTransparentSlider] = useState(false);
+    const [startingMouse, setStartingMouse] = useState(false);
+    const [mousePosition, setMousePosition] = useState(false);
 
     useEffect(() => {
         convert(background);
     }, [background])
 
+    useEffect(() => {
+        if (startingMouse) {
+            const mouseMovement = calculateMouseMovement(startingMouse, mousePosition);
+            setNewSelectorPosition(calculateNewSelectorPosition(selectorPosition, mouseMovement));
+        }
+        // calculate rgb value
+    }, [mousePosition])
+
+    // mouse down set dragging and get starting mouse POSITION
+    // get y proportion
+    // get x proportion
+
+    // move
+
+
+    // mouse move get mouse position and compare to starting position
+    // adjust x and y
+
+    const getMouseCoords = (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        return [x, y];
+    }
+
+    const trackMouse = (e) => {
+        if (startingMouse) {
+            setMousePosition(getMouseCoords(e));
+        }
+    }
+
+    const calculateMouseMovement = (startingCoords, newCoords) => {
+        const left = newCoords[0] - startingCoords[0];
+        const top = newCoords[1] - startingCoords[1];
+        console.log("MOUSEMOVEMENT: ", left + " " + top);
+        return [left, top];
+    }
+
+    const calculateNewSelectorPosition = (startingPosition, mouseChanges) => {
+        console.log(startingPosition + " " + mouseChanges);
+        let left = startingPosition[0] + mouseChanges[0];
+        let top = startingPosition[1] + mouseChanges[1];
+        console.log("selectorPosition: ", left + " " + top);
+        return [left, top];
+    }
+
+    const endDragging = () => {
+        setStartingMouse(false);
+        setSelectorPosition(newSelectorPosition);
+    }
+
 
     const container = {
-        width: '220px',
+        width: '255px',
         height: '200px',
         background: '#fff',
         boxShadow: '2px 2px 3px 0px lightgrey',
@@ -114,8 +167,8 @@ const ColorPicker = () => {
     }
 
     const colorSelector = {
-        width: '15px',
-        height: '15px'
+        width: '21px',
+        height: '21px'
     }
 
     const slider = {
@@ -142,38 +195,61 @@ const ColorPicker = () => {
         background: '#ffffff',
     }
 
+    const mouseEventCover = {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+    }
+
     const changeHex = (val) => {
         setBackground(val);
     }
 
+    const change = (coords) => {
+        // every pixel left
+        // range = 255 - rgb[i];
+        //  range / 255
+    }
+
     const convert = (val) => {
         console.log(val.length);
-        // if (val[0] === "#") {
-        //     console.log("value: ", val);
-        //     // Convert Hex to RGB
-        //     const rgb = [0,0,0];
-        //     for (let i = 1; i <= rgb.length; i ++) {
-        //         const n = parseInt(val[i] + val[i+1], 16);
-        //         rgb.push(n => 0 ? n : 0);
-        //     }
-        //     console.log(rgb);
-        // }
-        // else {
-        //     // Convert RGB to hex
-        //     const hex = val.toString(16);
-        //     console.log(hex);
-        // }
+        if (val[0] === "#") {
+            console.log("value: ", val);
+            // Convert Hex to RGB
+            const rgb = [];
+            for (let i = 0; i < 6; i+=2) {
+                console.log("OK");
+                console.log(val[i+1] + val[i+2]);
+                const n = parseInt(val[i+1] + val[i+2], 16);
+                rgb.push(n >= 0 ? n : 0);
+            }
+            console.log(rgb);
+        }
+        else {
+            // Convert RGB to hex
+            const hex = val.toString(16);
+            console.log(hex);
+        }
     }
 
     return (
         <div style={container}>
-            <div style={containerTop}>
+            <div
+                style={containerTop}
+            >
                 <div style={{...backgroundContainer, background: background}}></div>
                 <div style={backgroundWhite}></div>
                 <div style={backgroundBlack}></div>
-                <div style={{...slider, ...colorSelector, left: `${selectorPosition[0]}%` ,top: `${selectorPosition[1]}%`,}}>
+                <div style={{...slider, ...colorSelector, left: `${newSelectorPosition[0]}px` ,top: `${newSelectorPosition[1]}px`,}}>
                     <div style={sliderPoint}></div>
                 </div>
+                <div
+                    onMouseDown={(e) => {setStartingMouse(getMouseCoords(e)); setNewSelectorPosition([e.nativeEvent.offsetX, e.nativeEvent.offsetY]); setSelectorPosition([e.nativeEvent.offsetX, e.nativeEvent.offsetY])}}
+                    onMouseMove={(e) => trackMouse(e)}
+                    onMouseUp={() => endDragging()}
+                    onMouseLeave={() => endDragging()}
+                    style={mouseEventCover}
+                ></div>
             </div>
             <div style={containerBottom}>
                 <div style={containerBottomLeft}>
