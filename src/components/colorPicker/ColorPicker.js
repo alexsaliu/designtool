@@ -3,6 +3,7 @@ import Transparent from './transparent.png';
 
 const ColorPicker = () => {
     const [background, setBackground] = useState('#642BCD');
+    const [sampleColorVal, setSampleColorVal] = useState('#642BCD');
     const [selectorPosition, setSelectorPosition] = useState([20, 20]);
     const [newSelectorPosition, setNewSelectorPosition] = useState(false);
     const [colorSliderPosition, setColorSliderPosition] = useState(10);
@@ -20,7 +21,31 @@ const ColorPicker = () => {
     useEffect(() => {
         if (startingMouse) {
             const mouseMovement = calculateMouseMovement(startingMouse, mousePosition);
-            setNewSelectorPosition(calculateNewSelectorPosition(selectorPosition, mouseMovement));
+            const newPosition = calculateNewSelectorPosition(selectorPosition, mouseMovement)
+            // console.log("newPosition: ", newPosition);
+            const backgroundRgb = convert(background);
+            console.log("backgroundRgb: ", backgroundRgb);
+            let newRgb = [0,0,0];
+            for (let i = 0; i < 3; i++) {
+                const axisDistanceFromRight = 255 - newPosition[0];
+                const percentageDecimalFromRight = axisDistanceFromRight / 255;
+                const axisRgbRange = 255 - backgroundRgb[i];
+                const rgb = percentageDecimalFromRight * axisRgbRange + backgroundRgb[i];
+                newRgb[i] = Math.round(rgb);
+            }
+            for (let i = 0; i < 3; i++) {
+                const axisDistanceFromTop = newPosition[1];
+                const percentageDecimalFromTop = axisDistanceFromTop / 125;
+                const axisRgbRange = newRgb[i];
+                const rgb = newRgb[i] - percentageDecimalFromTop * axisRgbRange;
+                newRgb[i] = Math.round(rgb);
+            }
+            console.log("newRgb: ", newRgb);
+            console.log("CONVERTED: ", convert(newRgb));
+            setSampleColorVal(convert(newRgb));
+
+            // left
+            setNewSelectorPosition(newPosition);
         }
         // calculate rgb value
     }, [mousePosition])
@@ -50,15 +75,15 @@ const ColorPicker = () => {
     const calculateMouseMovement = (startingCoords, newCoords) => {
         const left = newCoords[0] - startingCoords[0];
         const top = newCoords[1] - startingCoords[1];
-        console.log("MOUSEMOVEMENT: ", left + " " + top);
+        // console.log("MOUSEMOVEMENT: ", left + " " + top);
         return [left, top];
     }
 
     const calculateNewSelectorPosition = (startingPosition, mouseChanges) => {
-        console.log(startingPosition + " " + mouseChanges);
+        // console.log(startingPosition + " " + mouseChanges);
         let left = startingPosition[0] + mouseChanges[0];
         let top = startingPosition[1] + mouseChanges[1];
-        console.log("selectorPosition: ", left + " " + top);
+        // console.log("selectorPosition: ", left + " " + top);
         return [left, top];
     }
 
@@ -82,13 +107,13 @@ const ColorPicker = () => {
 
     const containerTop = {
         width: '100%',
-        height: '62%',
+        height: '125px',
         position: 'relative',
     }
 
     const containerBottom = {
         width: '100%',
-        height: '38%',
+        height: '75px',
         position: 'relative',
         display: 'flex',
         padding: '10px'
@@ -212,23 +237,31 @@ const ColorPicker = () => {
     }
 
     const convert = (val) => {
-        console.log(val.length);
+        // console.log(val.length);
         if (val[0] === "#") {
-            console.log("value: ", val);
+            // console.log("value: ", val);
             // Convert Hex to RGB
             const rgb = [];
             for (let i = 0; i < 6; i+=2) {
-                console.log("OK");
-                console.log(val[i+1] + val[i+2]);
+                // console.log("OK");
+                // console.log(val[i+1] + val[i+2]);
                 const n = parseInt(val[i+1] + val[i+2], 16);
                 rgb.push(n >= 0 ? n : 0);
             }
-            console.log(rgb);
+            // console.log(rgb);
+            return rgb
         }
         else {
             // Convert RGB to hex
-            const hex = val.toString(16);
+            let hex = "#";
+            for (let i = 0; i < 3; i++) {
+                let hexVal = val[i].toString(16);
+                hex += hexVal.length === 1 ? "0" + hexVal : hexVal;
+                console.log(val[i]);
+                console.log(Math.round(val[i]).toString(16));
+            }
             console.log(hex);
+            return hex;
         }
     }
 
@@ -253,7 +286,7 @@ const ColorPicker = () => {
             </div>
             <div style={containerBottom}>
                 <div style={containerBottomLeft}>
-                    <div style={{...sampleColor, background: background}}></div>
+                    <div style={{...sampleColor, background: sampleColorVal}}></div>
                 </div>
                 <div style={containerBottomRight}>
                     <div style={colorSliderBar}>
@@ -262,7 +295,7 @@ const ColorPicker = () => {
                     <div style={transparentSliderBar}>
                         <div style={{...slider, ...sliderShadow, left: `${transparentSliderPosition}%`}}></div>
                     </div>
-                    <input onChange={(e) => changeHex(e.target.value)} style={hexInput} value={background} type="text" />
+                    <input onChange={(e) => changeHex(e.target.value)} style={hexInput} value={sampleColorVal} type="text" />
                 </div>
             </div>
         </div>
