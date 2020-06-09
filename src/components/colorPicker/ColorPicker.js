@@ -126,7 +126,7 @@ const ColorPicker = () => {
     }
 
     const containerBottomRight = {
-        width: '80%',
+        width: '200px',
         height: '100%',
     }
 
@@ -265,6 +265,20 @@ const ColorPicker = () => {
         }
     }
 
+    const windowMouseMove = () => {
+        console.log('dodo');
+    }
+
+    const handelColorSlider = () => {
+        console.log("slider");
+        window.addEventListener('mousemove', windowMouseMove);
+        window.addEventListener('mouseup', function mouseup() {
+            console.log("removing event listeners");
+            window.removeEventListener('mousemove', windowMouseMove);
+            window.removeEventListener('mouseup', mouseup);
+        })
+    }
+
     return (
         <div style={container}>
             <div
@@ -290,7 +304,7 @@ const ColorPicker = () => {
                 </div>
                 <div style={containerBottomRight}>
                     <div style={colorSliderBar}>
-                        <div style={{...slider, ...sliderShadow, left: `${colorSliderPosition}%`}}></div>
+                        <div onMouseDown={() => handelColorSlider()} style={{...slider, ...sliderShadow, left: `${colorSliderPosition}%`}}></div>
                     </div>
                     <div style={transparentSliderBar}>
                         <div style={{...slider, ...sliderShadow, left: `${transparentSliderPosition}%`}}></div>
