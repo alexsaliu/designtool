@@ -6,7 +6,7 @@ const ColorPicker = () => {
     const [sampleColorVal, setSampleColorVal] = useState('#642BCD');
     const [selectorPosition, setSelectorPosition] = useState([20, 20]);
     const [newSelectorPosition, setNewSelectorPosition] = useState(false);
-    const [colorSliderPosition, setColorSliderPosition] = useState(10);
+    const [colorSliderPosition, setColorSliderPosition] = useState(0);
     const [transparentSliderPosition, setTransparentSliderPosition] = useState(15);
     const [moveColorSelector, setMoveColorSelector] = useState(false);
     const [moveColorSlider, setMoveColorSlider] = useState(false);
@@ -120,9 +120,9 @@ const ColorPicker = () => {
     }
 
     const containerBottomLeft = {
-        width: '20%',
+        width: '20px',
         height: '100%',
-        marginRight: '10px'
+        marginRight: '15px'
     }
 
     const containerBottomRight = {
@@ -230,52 +230,45 @@ const ColorPicker = () => {
         setBackground(val);
     }
 
-    const change = (coords) => {
-        // every pixel left
-        // range = 255 - rgb[i];
-        //  range / 255
-    }
-
     const convert = (val) => {
-        // console.log(val.length);
         if (val[0] === "#") {
-            // console.log("value: ", val);
-            // Convert Hex to RGB
             const rgb = [];
             for (let i = 0; i < 6; i+=2) {
-                // console.log("OK");
-                // console.log(val[i+1] + val[i+2]);
                 const n = parseInt(val[i+1] + val[i+2], 16);
                 rgb.push(n >= 0 ? n : 0);
             }
-            // console.log(rgb);
             return rgb
         }
         else {
-            // Convert RGB to hex
             let hex = "#";
             for (let i = 0; i < 3; i++) {
                 let hexVal = val[i].toString(16);
                 hex += hexVal.length === 1 ? "0" + hexVal : hexVal;
-                console.log(val[i]);
-                console.log(Math.round(val[i]).toString(16));
             }
-            console.log(hex);
             return hex;
         }
     }
 
-    const windowMouseMove = () => {
-        console.log('dodo');
+    const windowMouseMove = (e) => {
+        const el = document.querySelector('#colorSlider');
+        let left = el.style.left;
+        left = parseInt(left.match(/-?\d+/)[0]);
+        const change = e.movementX + left;
+        const currentPosition = colorSliderPosition;
+        if (change > 200 || change < 0) {
+            el.style.left = change > 200 ? '200px' : '0px';
+        }
+        else {
+            el.style.left = change + 'px';
+        }
     }
 
     const handelColorSlider = () => {
-        console.log("slider");
         window.addEventListener('mousemove', windowMouseMove);
         window.addEventListener('mouseup', function mouseup() {
-            console.log("removing event listeners");
             window.removeEventListener('mousemove', windowMouseMove);
             window.removeEventListener('mouseup', mouseup);
+            console.log("removed");
         })
     }
 
@@ -304,7 +297,7 @@ const ColorPicker = () => {
                 </div>
                 <div style={containerBottomRight}>
                     <div style={colorSliderBar}>
-                        <div onMouseDown={() => handelColorSlider()} style={{...slider, ...sliderShadow, left: `${colorSliderPosition}%`}}></div>
+                        <div id="colorSlider" onMouseDown={() => handelColorSlider()} style={{...slider, ...sliderShadow, left: `${colorSliderPosition}px`}}></div>
                     </div>
                     <div style={transparentSliderBar}>
                         <div style={{...slider, ...sliderShadow, left: `${transparentSliderPosition}%`}}></div>

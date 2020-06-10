@@ -6,7 +6,7 @@ import ColorPicker from './components/colorPicker/ColorPicker.js';
 function App() {
     return (
         <div className="App">
-            <ColorPicker />
+            <Editor />
         </div>
     );
 }

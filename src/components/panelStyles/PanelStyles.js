@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import '../../index.css';
 
-// import { ChromePicker } from 'react-color';
+import { ChromePicker } from 'react-color';
 import ColorPicker from '../colorPicker/ColorPicker.js';
 
 import {
@@ -132,12 +132,11 @@ const PanelStyles = () => {
                             <div className="style-label">Border</div>
                             <div className="style-value-container">
                                 <div className="color-box">
-                                    {/* <ChromePicker
+                                    <ChromePicker
                                       color={ test }
                                       onChange={ (val) => handleChange(val) }
                                       onChangeComplete={ (val) => handleChangeComplete(val) }
-                                    /> */}
-                                    <ColorPicker />
+                                    />
                                 </div>
                                 <input onChange={(e) => updateStyle(e, "border", "red")} value={border[0]} className="style-input" type="number"></input>
                             </div>
