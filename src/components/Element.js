@@ -95,7 +95,24 @@ const Element = ({ id }) => {
     }
     else {
         return (
-            <div>Trash</div>
+            <div
+                style={elements[id].style}
+                className={selectedId === id ? 'selected' : ''}
+                onMouseEnter={() => setHighlighted(true)}
+                onMouseLeave={() => setHighlighted(false)}
+            >
+                {elements[id].content}
+                {selectedId === id || highlighted
+                    ? <Adjuster
+                        styles={elements[id].style}
+                        selected={selectedId === id}
+                        setHighlighted={setHighlighted}
+                        updateElementPosition={updateElementPosition}
+                        commenceMovingElement={commenceMovingElement}
+                    /> : ''
+                }
+
+            </div>
         )
     }
 }

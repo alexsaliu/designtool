@@ -35,9 +35,10 @@ const PanelTop = () => {
                 'fontFamily': '',
                 'fontSize': '',
                 'textTransform': '',
-                'boxShadow': '0px'
+                'boxShadow': '0px',
+                'position': 'absolute'
             },
-            'content': '',
+            'content': 'Text',
             'link': ''
         }
         elements.push(newElement)
@@ -48,6 +49,7 @@ const PanelTop = () => {
     return (
         <div className="editor-section one">
             <button className="editor-button" onClick={() => createElement("button")}>Element</button>
+            <button className="editor-button" onClick={() => createElement("text")}>Text</button>
             <button className="editor-button" onClick={() => printDOM()}>Print</button>
         </div>
     );

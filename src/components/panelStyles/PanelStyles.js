@@ -28,6 +28,7 @@ const PanelStyles = () => {
     const [textTransform, setTextTransform] = useState('');
     const [link, setLink] = useState('');
     const [test, setTest] = useState('#000');
+    const [colorPicker, setColorPicker] = useState('');
 
     const elements = useSelector(state => state.editor.elements);
     const id = useSelector(state => state.editor.selectedElementId);
@@ -35,7 +36,7 @@ const PanelStyles = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (elements.length) {
+        if (elements.length && id >= 0) {
             const styles = {...elements[id].style};
             setLeft(getNumericValue(styles.left));
             setTop(getNumericValue(styles.top));
@@ -61,13 +62,11 @@ const PanelStyles = () => {
         dispatch(updateElements(updatedElements));
     }
 
-    const updateStyle = (e, style, color) => {
+    const updateStyle = (value, style, color) => {
         let updatedElements = [...elements];
-        let value = e.target.value;
-        console.log(style, color);
         switch (style) {
             case "background":
-                value = `#${value}`;
+                value = `${value}`;
                 break;
             case "borderRadius":
                 value = `${value}px`;
@@ -90,12 +89,21 @@ const PanelStyles = () => {
         dispatch(updateElements(updatedElements));
     }
 
-    const handleChange = (color) => {
-      setTest(color.hex);
+    const handleChange = (color, style) => {
+        switch(style) {
+            case 'border':
+                setBorder([border[0], color.hex]);
+                break;
+            case 'background':
+                setBackground(color);
+                break;
+            default:
+                return false;
+        }
     };
 
-    const handleChangeComplete = (color) => {
-      setTest(color.hex);
+    const picker = (type) => {
+        colorPicker === type ? setColorPicker('') : setColorPicker(type);
     }
 
     if (id >= 0) {
@@ -124,33 +132,60 @@ const PanelStyles = () => {
                         <div className="style-container">
                             <div className="style-label">Fill</div>
                             <div className="style-value-container">
-                                <div className="color-box"></div>
-                                <input onChange={(e) => updateStyle(e, "background")} className="style-input" type="text"></input>
+                                <div className="color-box" onClick={() => picker("background")} style={{background: background}}></div>
+                                {colorPicker === "background"
+                                    ?
+                                    <div style={{transform: 'translateY(23px)', position: 'absolute'}}>
+                                        <ChromePicker
+                                            color={ background }
+                                            onChange={ (val) => handleChange(val, "background") }
+                                            onChangeComplete={ (val) => updateStyle(val.hex, "background") }
+                                        />
+                                    </div>
+                                    : ''
+                                }
+                                <input onChange={(e) => updateStyle(e.target.value, "background")} className="style-input" type="text"></input>
                             </div>
                         </div>
                         <div className="style-container">
                             <div className="style-label">Border</div>
                             <div className="style-value-container">
-                                <div className="color-box">
-                                    <ChromePicker
-                                      color={ test }
-                                      onChange={ (val) => handleChange(val) }
-                                      onChangeComplete={ (val) => handleChangeComplete(val) }
-                                    />
-                                </div>
-                                <input onChange={(e) => updateStyle(e, "border", "red")} value={border[0]} className="style-input" type="number"></input>
+                                <div className="color-box" onClick={() => picker("border")} style={{background: border[1]}}></div>
+                                {colorPicker === "border"
+                                    ?
+                                    <div style={{transform: 'translateY(23px)', position: 'absolute'}}>
+                                        <ChromePicker
+                                            color={ border[1] }
+                                            onChange={ (val) => handleChange(val, "border") }
+                                            onChangeComplete={ (val) => updateStyle(border[0], "border", val.hex) }
+                                        />
+                                    </div>
+                                    : ''
+                                }
+                                <input onChange={(e) => updateStyle(e.target.value, "border", border[1])} value={border[0]} className="style-input" type="number"></input>
                             </div>
                         </div>
                         <div className="style-container">
                             <div className="style-label">Shadow</div>
                             <div className="style-value-container">
-                                <div className="color-box"></div>
-                                <input onChange={(e) => updateStyle(e, "boxShadow", "lightgrey")} className="style-input" type="number"></input>
+                                <div className="color-box" onClick={() => picker("boxShadow")} style={{background: boxShadow[1]}}></div>
+                                {colorPicker === "boxShadow"
+                                    ?
+                                    <div style={{transform: 'translateY(23px)', position: 'absolute'}}>
+                                        <ChromePicker
+                                            color={ boxShadow }
+                                            onChange={ (val) => handleChange(val, "boxShadow") }
+                                            onChangeComplete={ (val) => updateStyle(boxShadow, "boxShadow", val.hex) }
+                                        />
+                                    </div>
+                                    : ''
+                                }
+                                <input onChange={(e) => updateStyle(e.target.value, "boxShadow", "lightgrey")} className="style-input" type="number"></input>
                             </div>
                         </div>
                         <div className="style-container">
                             <div className="style-label">Radius</div>
-                            <input onChange={(e) => updateStyle(e, "borderRadius")} value={borderRadius} className="style-input" type="number"></input>
+                            <input onChange={(e) => updateStyle(e.target.value, "borderRadius")} value={borderRadius} className="style-input" type="number"></input>
                         </div>
                     </div>
                     <div className="style-section three">

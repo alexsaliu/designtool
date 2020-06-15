@@ -38,12 +38,13 @@ const Adjuster = ({
     }, [styles])
 
     const deleteElement = (e) => {
-        if(selectedId >= 0 && e.keyCode === 8) {
-            const elementsAfterDelete = [];
+        if(e.keyCode === 8) {
+            let elementsAfterDelete = [];
             for (let i = 0; i < elements.length; i++) {
                 if (i === selectedId) continue;
                 elementsAfterDelete.push({...elements[i]});
             }
+            console.log("elementsAfterDelete: ", elementsAfterDelete);
             dispatch(updateElements(elementsAfterDelete));
             dispatch(setSelectedElementId(-1));
         }

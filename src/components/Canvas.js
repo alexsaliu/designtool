@@ -16,27 +16,6 @@ const Canvas = () => {
     const selectedId = useSelector(state => state.editor.selectedElementId);
     const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     document.addEventListener("keydown", (e) => deleteElement(e));
-    // });
-
-    // const deleteElement = (e) => {
-    //     console.log(e);
-    //     console.log(selectedId);
-    //     if(selectedId >= 0 && e.keyCode === 8) {
-    //         const elementsAfterDelete = [];
-    //         for (let i = 0; i < elements.length; i++) {
-    //             if (i === selectedId) {
-    //                 console.log("OK");
-    //                 break;
-    //             }
-    //             elementsAfterDelete.push({...elements[i]});
-    //         }
-    //         dispatch(updateElements(elementsAfterDelete));
-    //         dispatch(setSelectedElementId(-1));
-    //     }
-    // }
-
     const deSelect = (e) => {
         dispatch(setSelectedElementId(-1));
     }
@@ -44,7 +23,7 @@ const Canvas = () => {
     return (
         <div
             className="canvas"
-            style={{width: `${canvasSize[0]}px`, height: `${canvasSize[1]}px`, background: "white"}}
+            style={{width: `${canvasSize[0]}px`, height: `${canvasSize[1]}px`, position: 'relative', background: "white"}}
             onMouseUp={() => dispatch(setUpdateCanvas(true))}
         >
             {selectedId >= 0 ? <div onClick={() => deSelect()} className="deselect-element"></div> : ''}
