@@ -46,11 +46,13 @@ body {
     height: 4rem;
     width: 14rem;
     background: no-repeat;
-    border: 7px dashed #ff8800;
+    border: 7px solid #59d812;
     font-size: 1.5rem;
     color: #575757;
     font-weight: bold;
     cursor: pointer;
+    border-radius: 20px;
+    box-shadow: 2px 2px 3px 0px lightgrey;
 }
 
 .canvas-container {
@@ -176,6 +178,22 @@ body {
     cursor: nesw-resize;
 }
 
+input.text-input {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    border: none;
+    outline: none;
+    font-size: inherit;
+    background: none;
+    box-sizing: border-box;
+    padding: 0;
+    word-break: break-all;
+    color: #ffffff00;
+    caret-color: black;
+}
+
 .dimensions {
     bottom: -1.4rem;
     font-size: 0.6rem;
@@ -268,10 +286,17 @@ body {
 .color-box {
     width: 15px;
     height: 20px;
-    background: green;
+    border: 1px solid lightgray;
 }
 
 .style-value-container {
     display: flex;
 }
 /* Style editor panel */
+
+.image {
+    background-image: url("./assets/img.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}

@@ -6,7 +6,6 @@ import Adjuster from './Adjuster.js';
 import {
     getNumericValue,
     calculateElementNewPosition,
-    checkPositionBoundaries,
     getUpdatedElementPosition,
     getUpdatedElementDimensions
  } from '../helpers.js';
@@ -71,50 +70,34 @@ const Element = ({ id }) => {
         dispatch(setUpdateCanvas(false));
     }
 
-    if (elements[id].type === 'button') {
-        return (
-            <div
-                style={elements[id].style}
-                className={selectedId === id ? 'selected' : ''}
-                onMouseEnter={() => setHighlighted(true)}
-                onMouseLeave={() => setHighlighted(false)}
-            >
-
-                {selectedId === id || highlighted
-                    ? <Adjuster
-                        styles={elements[id].style}
-                        selected={selectedId === id}
-                        setHighlighted={setHighlighted}
-                        updateElementPosition={updateElementPosition}
-                        commenceMovingElement={commenceMovingElement}
-                    /> : ''
-                }
-
-            </div>
-        );
+    const updateContent = (text) => {
+        let currentElements = [...elements];
+        currentElements[selectedId].content = text;
+        dispatch(updateElements(updatedElements));
     }
-    else {
-        return (
-            <div
-                style={elements[id].style}
-                className={selectedId === id ? 'selected' : ''}
-                onMouseEnter={() => setHighlighted(true)}
-                onMouseLeave={() => setHighlighted(false)}
-            >
-                {elements[id].content}
-                {selectedId === id || highlighted
-                    ? <Adjuster
-                        styles={elements[id].style}
-                        selected={selectedId === id}
-                        setHighlighted={setHighlighted}
-                        updateElementPosition={updateElementPosition}
-                        commenceMovingElement={commenceMovingElement}
-                    /> : ''
-                }
 
-            </div>
-        )
-    }
+    return (
+        <div
+            style={elements[id].style}
+            className={selectedId === id ? 'selected' : ''}
+            onMouseEnter={() => setHighlighted(true)}
+            onMouseLeave={() => setHighlighted(false)}
+        >
+            {elements[id].type === 'text' ? elements[id].content : ''}
+
+            {selectedId === id || highlighted
+                ? <Adjuster
+                    styles={elements[id].style}
+                    selected={selectedId === id}
+                    setHighlighted={setHighlighted}
+                    updateElementPosition={updateElementPosition}
+                    commenceMovingElement={commenceMovingElement}
+                    updateContent={updateContent}
+                /> : ''
+            }
+
+        </div>
+    );
 }
 
 export default Element;

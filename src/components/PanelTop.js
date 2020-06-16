@@ -30,13 +30,21 @@ const PanelTop = () => {
                 'height': '100px',
                 'zIndex': String(id),
                 'background': '',
-                'border': '1px solid grey',
+                'color': '',
+                'border': type === 'element' ? '1px solid grey' : '',
                 'borderRadius': '0px',
                 'fontFamily': '',
                 'fontSize': '',
                 'textTransform': '',
+                'letterSpacing': '',
+                'wordSpacing': '',
                 'boxShadow': '0px',
-                'position': 'absolute'
+                'position': 'absolute',
+                'boxSizing': 'borderBox',
+                'backgroundImage': '',
+                "backgroundSize": type === 'image' ? 'cover' : '',
+                'backgroundPosition': type === 'image' ? 'center' : '',
+                'backgroundRepeat': type === 'image' ? 'noRepeat' : ''
             },
             'content': 'Text',
             'link': ''
@@ -48,8 +56,9 @@ const PanelTop = () => {
 
     return (
         <div className="editor-section one">
-            <button className="editor-button" onClick={() => createElement("button")}>Element</button>
-            <button className="editor-button" onClick={() => createElement("text")}>Text</button>
+            <button className="editor-button" onClick={() => createElement("element")}>+ Element</button>
+            <button className="editor-button" onClick={() => createElement("text")}>+ Text</button>
+            <button className="editor-button" onClick={() => createElement("image")}>+ Image</button>
             <button className="editor-button" onClick={() => printDOM()}>Print</button>
         </div>
     );

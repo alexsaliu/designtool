@@ -16,9 +16,12 @@ const Adjuster = ({
     updateElementPosition,
     commenceMovingElement,
     updateElementDimensions,
-    commenceAdjustingElement
+    commenceAdjustingElement,
+    updateContent
 }) => {
     const [adjusterStyles, setAdjusterStyles] = useState({});
+    const [clicked, setClicked] = useState(false);
+    const [textInput, setTextInput] = useState(false);
 
     const isMoving = useSelector(state => state.editor.movingElement);
     const selectedId = useSelector(state => state.editor.selectedElementId);
@@ -45,8 +48,20 @@ const Adjuster = ({
                 elementsAfterDelete.push({...elements[i]});
             }
             console.log("elementsAfterDelete: ", elementsAfterDelete);
+            setTextInput(false);
             dispatch(updateElements(elementsAfterDelete));
             dispatch(setSelectedElementId(-1));
+        }
+    }
+
+    const handelDoubleClick = () => {
+        if (elements[selectedId].type !== 'text') return;
+        setClicked(true);
+        setTimeout(() => {
+            setClicked(false);
+        }, 200)
+        if (clicked) {
+            setTextInput(true);
         }
     }
 
@@ -55,6 +70,7 @@ const Adjuster = ({
             <div
                 style={adjusterStyles}
                 className="adjuster-container"
+                onClick={() => handelDoubleClick()}
             >
                 <div
                     className="adjuster-dragger"
@@ -75,6 +91,7 @@ const Adjuster = ({
 
                 { !isMoving && selected ? <div className="dimensions">{styles.width.match(/\d+/)[0]} x {styles.height.match(/\d+/)[0]}</div> : ''}
 
+                {textInput ? <input className="text-input" autoFocus onChange={(e) => updateContent(e.target.value)} value={elements[selectedId].content} type="text" /> : ''}
             </div>
         );
     }
