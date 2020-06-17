@@ -14,6 +14,9 @@ import {
     updateElements
 } from '../../store/actions/actions.js';
 
+
+import ImageUploader from 'react-images-upload';
+
 const PanelStyles = () => {
     const [left, setLeft] = useState('');
     const [top, setTop] = useState('');
@@ -30,6 +33,8 @@ const PanelStyles = () => {
     const [link, setLink] = useState('');
     const [test, setTest] = useState('#000');
     const [colorPicker, setColorPicker] = useState('');
+
+    const [image, setImage] = useState('');
 
     const elements = useSelector(state => state.editor.elements);
     const id = useSelector(state => state.editor.selectedElementId);
@@ -86,6 +91,8 @@ const PanelStyles = () => {
             case "textTransform":
                 value = textTransform === 'Aa' ? 'uppercase' : textTransform === 'AA' ? 'lowercase' : '';
                 break;
+            case "backgroundImage":
+                value = `url(${value})`
             default:
                 break;
         }
@@ -200,9 +207,10 @@ const PanelStyles = () => {
                                     <input onChange={(e) => updateStyle(e.target.value, "borderRadius")} value={borderRadius} className="style-input" type="number"></input>
                                 </div>
                             </div>
-
-                        :
-
+                            : ''
+                        }
+                        {
+                            elements[id].type === "text" ?
                             <div className="style-section three">
                                 <div className="style-container">
                                     <div className="style-label">Font</div>
@@ -234,6 +242,19 @@ const PanelStyles = () => {
                                     <div onClick={() => updateStyle(textTransform, "textTransform")} className="style-label">{textTransform}</div>
                                 </div>
                             </div>
+                            : ''
+                    }
+                    {
+                        elements[id].type === "image" ?
+                            <div className="style-section three">
+                                <ImageUploader
+                                    buttonText='Upload Image'
+                                    onChange={(file, data) => updateStyle(data, 'backgroundImage')}
+                                    withLabel={false}
+                                    withIcon={false}
+                                />
+                            </div>
+                        : ''
                     }
                 </div>
             </div>

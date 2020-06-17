@@ -6,7 +6,7 @@ const PanelTwo = () => {
     return (
         <div className="editor-section two">
             <div className="editor-panel">
-                2
+                
             </div>
         </div>
     );
